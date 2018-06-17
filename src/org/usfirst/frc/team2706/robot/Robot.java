@@ -130,10 +130,6 @@ public class Robot extends IterativeRobot {
                         || DriverStation.getInstance().isDisabled()) {
             driveTrain.log();
         }
-
-        if (DriverStation.getInstance().isEnabled()) {
-            driveTrain.debugLog();
-        }
     }
 
     public void initTestMode() {

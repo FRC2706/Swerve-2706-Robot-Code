@@ -5,11 +5,15 @@ import org.usfirst.frc.team2706.robot.Log;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.Notifier;
+
 /**
  * Handles driving with talon PIDs FIXME: Sometimes finished early when the error in the talons
  * isn't updated quickly enough
  */
+// TODO: Implement Controller in 2019 WPILib
 public class TalonPID {
+    private Notifier updater = new Notifier(this::update);
 
     /**
      * The talons that will PID
@@ -45,6 +49,9 @@ public class TalonPID {
      */
     public TalonPID(TalonSensorGroup... talons) {
         this.talons = talons;
+        
+        // Update at 20Hz
+        this.updater.startPeriodic(0.05);
     }
 
     /**
@@ -220,7 +227,7 @@ public class TalonPID {
         enabled = false;
     }
 
-    public void update() {
+    private void update() {
         if (enabled) {
 
             for (TalonSensorGroup talon : talons) {
