@@ -42,9 +42,8 @@ public class SwerveDriveTrain extends Subsystem {
         backRightSwerve = makeSwerveModule(RobotMap.MOTOR_BACK_RIGHT_ROTATION, RobotMap.MOTOR_BACK_RIGHT_DRIVE);
         backRightEncoder = ((TalonServo)backRightSwerve.getRotationServo()).getTalons().getTalonEncoder();
 
-        drive = new SwerveDrive(frontLeftSwerve, backLeftSwerve, frontRightSwerve, backRightSwerve);
-
-
+        drive = new SwerveDrive(frontLeftSwerve, backLeftSwerve, frontRightSwerve, backRightSwerve,
+                        RobotMap.WHEELBASE, RobotMap.TRACK_WIDTH);
     }
     
     private SwerveModule makeSwerveModule(int rotate, int forward) {

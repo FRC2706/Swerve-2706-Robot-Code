@@ -19,4 +19,9 @@ public class SwerveModule {
     public IServo getRotationServo() {
         return rotationServo;
     }
+    
+    public void set(double speed, double angle) {
+        driveMotor.set(speed);
+        rotationServo.setDesiredAngle(angle);
+    }
 }

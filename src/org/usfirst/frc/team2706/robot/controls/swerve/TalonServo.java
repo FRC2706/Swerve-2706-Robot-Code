@@ -23,20 +23,49 @@ public class TalonServo extends SendableBase implements IServo {
     
     @Override
     public void setDesiredAngle(double degrees) {
-        // TODO: Convert to absolute value
-        setDesiredPosition(degrees);
+        double a1 = getActualAngle();
+        if(a1 < 0) {
+            a1 += 360;
+        }
+        
+        double a2 = degrees;
+        if(a1 < 0) {
+            a2 += 360;
+        }
+        
+        setAngleRelative(180 - Math.abs(Math.abs(a1 - a2) - 180));
     }
 
+    public void setAngleRelative(double angleChange) {
+        setDesiredPosition(getActualPosition() + angleChange);
+    }
+    
     @Override
     public double getDesiredAngle() {
-        // TODO: Convert to absolute value
-        return getDesiredPosition();
+        return normalize(getDesiredPosition());
     }
 
     @Override
     public double getActualAngle() {
-        // TODO: Convert to absolute value
-        return getActualPosition();
+        return normalize(getActualPosition());
+    }
+    
+    private double normalize(double actual) {
+        double modded = actual % 360.0;
+
+        double normalized;
+        if(modded > 180) {
+            normalized = modded - 360.0;
+        }
+        else if(modded < -180) {
+            normalized = modded + 360.0;
+        }
+        else {
+            normalized = modded;
+        }
+
+        
+        return normalized;
     }
 
     @Override

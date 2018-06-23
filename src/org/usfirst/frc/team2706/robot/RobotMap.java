@@ -33,6 +33,9 @@ public class RobotMap {
     
     public static final int MOTOR_BACK_RIGHT_DRIVE = -1;
     public static final int MOTOR_BACK_RIGHT_ROTATION = -1;
+    
+    public static final double WHEELBASE = 60;
+    public static final double TRACK_WIDTH = 40;
 
     /**
      * Prints which RobotMap is being used
