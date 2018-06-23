@@ -2,8 +2,16 @@ package org.usfirst.frc.team2706.robot.controls.swerve;
 
 import edu.wpi.first.wpilibj.Servo;
 
+/**
+ * A servo that uses WPILibs built in Servo class over PWM
+ */
 public class PWMServo extends Servo implements IServo {
 
+    /**
+     * Creates a PWMServo
+     * 
+     * @param channel The PWM channel that the servo is on
+     */
     public PWMServo(int channel) {
         super(channel);
     }

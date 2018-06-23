@@ -26,6 +26,7 @@ import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 
 import sun.misc.Unsafe;
 
+@SuppressWarnings("restriction")
 public class MockWPI_TalonSRX implements IWPI_TalonSRX {
 
     @Override
@@ -492,12 +493,17 @@ public class MockWPI_TalonSRX implements IWPI_TalonSRX {
     @Override
     public void valueUpdated() {}
 
+    /**
+     * The sensor collection to return if requested
+     */
     private final SensorCollection collection;
 
     {
+        // Instantiate using Unsafe to avoid needing to provide a real motor
         MockSensorCollection temp = null;
 
         try {
+            
             Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
             unsafeField.setAccessible(true);
             Unsafe unsafe = (Unsafe) unsafeField.get(null);
@@ -520,77 +526,96 @@ public class MockWPI_TalonSRX implements IWPI_TalonSRX {
         return ControlMode.Disabled;
     }
 
+    /**
+     * A mock SensorCollection that does not query an actual motor controller
+     */
     private class MockSensorCollection extends SensorCollection {
 
         public MockSensorCollection() {
             super(null);
         }
 
+        @Override
         public int getAnalogIn() {
             return 0;
         }
 
+        @Override
         public ErrorCode setAnalogPosition(int newPosition, int timeoutMs) {
             return ErrorCode.FeatureNotSupported;
         }
 
+        @Override
         public int getAnalogInRaw() {
             return 0;
         }
 
+        @Override
         public int getAnalogInVel() {
             return 0;
         }
 
+        @Override
         public int getQuadraturePosition() {
             return 0;
         }
 
+        @Override
         public ErrorCode setQuadraturePosition(int newPosition, int timeoutMs) {
             return ErrorCode.FeatureNotSupported;
         }
 
+        @Override
         public int getQuadratureVelocity() {
             return 0;
         }
 
+        @Override
         public int getPulseWidthPosition() {
             return 0;
         }
 
+        @Override
         public ErrorCode setPulseWidthPosition(int newPosition, int timeoutMs) {
             return ErrorCode.FeatureNotSupported;
         }
 
+        @Override
         public int getPulseWidthVelocity() {
             return 0;
         }
 
+        @Override
         public int getPulseWidthRiseToFallUs() {
             return 0;
         }
 
+        @Override
         public int getPulseWidthRiseToRiseUs() {
             return 0;
         }
 
+        @Override
         public boolean getPinStateQuadA() {
             return false;
         }
 
-
+        @Override
         public boolean getPinStateQuadB() {
             return false;
         }
 
+        @Override
         public boolean getPinStateQuadIdx() {
             return false;
         }
 
+        @Override
         public boolean isFwdLimitSwitchClosed() {
             return false;
         }
 
+        @Override
         public boolean isRevLimitSwitchClosed() {
             return false;
         }

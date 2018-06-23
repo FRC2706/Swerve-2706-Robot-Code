@@ -25,6 +25,9 @@ import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 
 import edu.wpi.first.wpilibj.SpeedController;
 
+/**
+ * Contains all the methods required to run a WPI_TalonSRX. Allows for the use of mock Talons
+ */
 public interface IWPI_TalonSRX extends IMotorControllerEnhanced, SpeedController {
 
     public long getHandle();

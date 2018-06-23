@@ -13,6 +13,10 @@ import edu.wpi.first.wpilibj.Notifier;
  */
 // TODO: Implement Controller in 2019 WPILib
 public class TalonPID {
+    
+    /**
+     * Calls the {@link TalonPID#update()} method every 50ms
+     */
     private Notifier updater = new Notifier(this::update);
 
     /**
@@ -227,6 +231,9 @@ public class TalonPID {
         enabled = false;
     }
 
+    /**
+     * Updates the position of the Talon based on the position set
+     */
     private void update() {
         if (enabled) {
 
@@ -265,6 +272,11 @@ public class TalonPID {
         return true;
     }
     
+    /**
+     * Whether the PID is enabled
+     * 
+     * @return {@code true} if the PID is enabled, {@code false} otherwise
+     */
     public boolean isEnabled() {
         return enabled;
     }

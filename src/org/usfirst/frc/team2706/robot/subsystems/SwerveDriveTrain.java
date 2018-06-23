@@ -19,17 +19,38 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/**
+ * Runs the driving system of a robot with a swerve drive base
+ */
 public class SwerveDriveTrain extends Subsystem {
+    
+    /**
+     * Each of the modules used to drive the robot
+     */
     private final SwerveModule frontLeftSwerve, backLeftSwerve, frontRightSwerve, backRightSwerve;
+    
+    /**
+     * Each of the rotation encoders on the motors used to rotate the motors
+     */
     private final TalonEncoder frontLeftEncoder, backLeftEncoder, frontRightEncoder, backRightEncoder;
 
+    /**
+     * The drive base used to control the swerve modules in teleop
+     */
     private SwerveDrive drive;
 
+    /**
+     * The default command to run in teleop
+     */
     private Command defaultCommand;
 
+    /**
+     * Creates a swerve drive and all of the required motors and sensors
+     */
     public SwerveDriveTrain() {
         super();
 
+        // Initialize the swerve modules and encoders
         frontLeftSwerve = makeSwerveModule(RobotMap.MOTOR_FRONT_LEFT_ROTATION, RobotMap.MOTOR_FRONT_LEFT_DRIVE);
         frontLeftEncoder = ((TalonServo)frontLeftSwerve.getRotationServo()).getTalons().getTalonEncoder();
         
@@ -46,7 +67,15 @@ public class SwerveDriveTrain extends Subsystem {
                         RobotMap.WHEELBASE, RobotMap.TRACK_WIDTH);
     }
     
+    /**
+     * Creates a swerve module using Talon servoes and drive motors
+     * 
+     * @param rotate The ID of the rotational Talon (or -1 to use mock Talon)
+     * @param forward The ID of the drive Talon (or -1 to use mock Talon)
+     * @return The swerve drive
+     */
     private SwerveModule makeSwerveModule(int rotate, int forward) {
+        // Create the rotate Talon, unless it should be a mock Talon
         IWPI_TalonSRX rotateMotor;
         if(rotate == -1) {
             rotateMotor = new MockWPI_TalonSRX();
@@ -55,8 +84,10 @@ public class SwerveDriveTrain extends Subsystem {
             rotateMotor = new EWPI_TalonSRX(rotate);
         }
         
+        // Create a servo with the rotate Talon
         TalonServo servo = new TalonServo(new TalonSensorGroup(rotateMotor, new TalonEncoder(rotateMotor)));
         
+        // Create the drive Talon, unless it should be a mock Talon
         IWPI_TalonSRX forwardMotor;
         if(forward == -1) {
             forwardMotor = new MockWPI_TalonSRX();
@@ -65,6 +96,7 @@ public class SwerveDriveTrain extends Subsystem {
             forwardMotor = new EWPI_TalonSRX(forward);
         }
         
+        // Create the swerve module
         return new SwerveModule(forwardMotor, servo);
     }
     public void initTestMode() {
@@ -74,6 +106,7 @@ public class SwerveDriveTrain extends Subsystem {
     /**
      * When no other command is running let the operator drive around using the Xbox joystick.
      */
+    @Override
     public void initDefaultCommand() {
         if (defaultCommand == null) {
             getDefaultCommand();
@@ -82,7 +115,8 @@ public class SwerveDriveTrain extends Subsystem {
 
         Log.i("Drive Train Command", defaultCommand);
     }
-
+    
+    @Override
     public Command getDefaultCommand() {
         if (defaultCommand == null) {
             defaultCommand = new ArcadeDriveWithJoystick();
@@ -105,6 +139,9 @@ public class SwerveDriveTrain extends Subsystem {
         SmartDashboard.putNumber("Back Right Speed", backRightEncoder.getRate());
     }
 
+    /**
+     * Logs debug information about the motors and sensors in the drivetrain
+     */
     public void debugLog() {
         Log.d("Drive Train", "Front Left Distance" + frontLeftEncoder.getDistance());
         Log.d("Drive Train", "Back Left Distance" + backLeftEncoder.getDistance());
@@ -139,6 +176,9 @@ public class SwerveDriveTrain extends Subsystem {
                         + ((IWPI_TalonSRX) backLeftSwerve.getDriveMotor()).getMotorOutputPercent());
     }
 
+    /**
+     * Resets the sensors on the drivetrain
+     */
     public void reset() {
         frontLeftEncoder.reset();
         backLeftEncoder.reset();
@@ -146,6 +186,11 @@ public class SwerveDriveTrain extends Subsystem {
         backRightEncoder.reset();
     }
     
+    /**
+     * Swerve drives using the joystick
+     * 
+     * @param joy The joystick to swerve drive with
+     */
     public void swerveDrive(GenericHID joy) {
         double XAxis = RobotMap.INVERT_JOYSTICK_X ? -joy.getRawAxis(0) : joy.getRawAxis(0);
         double YAxis = RobotMap.INVERT_JOYSTICK_Y ? -joy.getRawAxis(1) : joy.getRawAxis(1);
@@ -154,6 +199,13 @@ public class SwerveDriveTrain extends Subsystem {
         swerveDrive(YAxis, XAxis, ZAxis);
     }
     
+    /**
+     * Swerve drives using input values
+     * 
+     * @param forward The forward value
+     * @param strafe The strafe value
+     * @param rotation The rotation value
+     */
     public void swerveDrive(double forward, double strafe, double rotation) {
         drive.swerveDrive(forward, strafe, rotation, true);
     }
@@ -174,6 +226,9 @@ public class SwerveDriveTrain extends Subsystem {
         ((IWPI_TalonSRX) backRightSwerve.getDriveMotor()).setNeutralMode(mode);
     }
     
+    /**
+     * Stops the swerve drive control until it is set to a new value
+     */
     public void stopSwerve() {
         drive.stopSwerve();
     }

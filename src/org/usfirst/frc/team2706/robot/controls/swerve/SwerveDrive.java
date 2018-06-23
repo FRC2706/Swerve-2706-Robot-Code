@@ -7,17 +7,41 @@ import java.util.Collections;
 import edu.wpi.first.wpilibj.drive.RobotDriveBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
+/**
+ * Swerve drive platform that can move forward, strafe, and rotate using joystick values
+ */
 public class SwerveDrive extends RobotDriveBase {
 
+    /**
+     * Each swerve module that controls a servo and motor
+     */
     private final SwerveModule frontLeftSwerve, backLeftSwerve, frontRightSwerve, backRightSwerve;
 
-    // Convenient for applying same operation to each module
+    /**
+     * Each of the swerve modules in a collection for applying blanket operations
+     */
     private final Collection<SwerveModule> modules;
 
+    /**
+     * The length of the wheelbase and the distance between wheels on the robot
+     */
     private final double wheelBase, trackWidth;
 
+    /**
+     * The turning radius of the robot
+     */
     private final double radius;
 
+    /**
+     * Creates SwerveDrive
+     * 
+     * @param frontLeftSwerve The front left swerve module on the robot
+     * @param backLeftSwerve The back left swerve module on the robot
+     * @param frontRightSwerve The front right swerve module on the robot
+     * @param backRightSwerve The back right swerve module on the robot
+     * @param wheelBase The length of the wheelbase
+     * @param trackWidth The distance between the wheels
+     */
     public SwerveDrive(SwerveModule frontLeftSwerve, SwerveModule backLeftSwerve,
                     SwerveModule frontRightSwerve, SwerveModule backRightSwerve, double wheelBase,
                     double trackWidth) {
@@ -26,6 +50,7 @@ public class SwerveDrive extends RobotDriveBase {
         this.frontRightSwerve = frontRightSwerve;
         this.backRightSwerve = backRightSwerve;
 
+        // Put all the swerve modules in a collection for convenience
         modules = Collections.unmodifiableCollection(Arrays.asList(backLeftSwerve, backRightSwerve,
                         frontLeftSwerve, frontRightSwerve));
 
@@ -35,10 +60,25 @@ public class SwerveDrive extends RobotDriveBase {
         this.radius = Math.hypot(wheelBase, trackWidth);
     }
 
+    /**
+     * Drives the swerve robot using squared inputs
+     * 
+     * @param forward The forward magnitude from -1 to 1
+     * @param strafe The strafe magnitude from -1 to 1
+     * @param rotate The rotate value from -1 to 1
+     */
     public void swerveDrive(double forward, double strafe, double rotate) {
         swerveDrive(forward, strafe, rotate, true);
     }
 
+    /**
+     * Drives the swerve robot
+     * 
+     * @param forward The forward magnitude from -1 to 1
+     * @param strafe The strafe magnitude from -1 to 1
+     * @param rotate The rotate value from -1 to 1
+     * @param squaredInputs Whether the values should be squared for better precision at low speeds
+     */
     public void swerveDrive(double forward, double strafe, double rotate, boolean squaredInputs) {
         if (squaredInputs) {
             forward *= forward;
@@ -65,6 +105,7 @@ public class SwerveDrive extends RobotDriveBase {
         double backLeftSpeed = Math.hypot(a, c);
         double backLeftAngle = Math.toDegrees(Math.atan2(a, c));
 
+        // Make all speed outputs 0 to 1
         double max = frontRightSpeed;
         if (frontLeftSpeed > max)
             max = frontLeftSpeed;
@@ -80,6 +121,7 @@ public class SwerveDrive extends RobotDriveBase {
             backLeftSpeed /= max;
         }
 
+        // Set the angle and speed for each swerve module
         frontRightSwerve.set(frontRightSpeed, frontRightAngle);
         frontLeftSwerve.set(frontLeftSpeed, frontLeftAngle);
         backRightSwerve.set(backRightSpeed, backRightAngle);
@@ -94,6 +136,9 @@ public class SwerveDrive extends RobotDriveBase {
     }
     
 
+    /**
+     * Stops the swerve drive and control of the servo
+     */
     public void stopSwerve() {
         stopMotor();
         
