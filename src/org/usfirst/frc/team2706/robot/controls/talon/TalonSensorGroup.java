@@ -12,7 +12,7 @@ public class TalonSensorGroup {
     /**
      * The main talon attached to the encoder
      */
-    private final TalonSRX master;
+    private final IWPI_TalonSRX master;
 
     /**
      * The encoder of the talon
@@ -36,7 +36,7 @@ public class TalonSensorGroup {
      * @param talonEncoder The encoder of the master talon
      * @param slaves The following talons
      */
-    public TalonSensorGroup(TalonSRX master, TalonEncoder talonEncoder, TalonSRX... slaves) {
+    public TalonSensorGroup(IWPI_TalonSRX master, TalonEncoder talonEncoder, TalonSRX... slaves) {
         this(master, (it) -> {
         }, talonEncoder, slaves);
     }
@@ -49,7 +49,7 @@ public class TalonSensorGroup {
      * @param talonEncoder The encoder of the master talon
      * @param slaves The following talons
      */
-    public TalonSensorGroup(TalonSRX master, Consumer<Boolean> safetySetter,
+    public TalonSensorGroup(IWPI_TalonSRX master, Consumer<Boolean> safetySetter,
                     TalonEncoder talonEncoder, TalonSRX... slaves) {
         this.master = master;
         this.safetySetter = safetySetter;
@@ -62,7 +62,7 @@ public class TalonSensorGroup {
      * 
      * @return The master talon
      */
-    public TalonSRX getMaster() {
+    public IWPI_TalonSRX getMaster() {
         return master;
     }
 

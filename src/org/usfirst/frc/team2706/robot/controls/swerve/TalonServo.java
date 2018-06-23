@@ -63,5 +63,8 @@ public class TalonServo extends SendableBase implements IServo {
         builder.addDoubleProperty("Normalized", this::getDesiredAngle, this::setDesiredAngle);
         builder.addDoubleProperty("Absolute", this::getDesiredPosition, this::setDesiredPosition);
     }
-
+    
+    public TalonSensorGroup getTalons() {
+        return talons;
+    }
 }

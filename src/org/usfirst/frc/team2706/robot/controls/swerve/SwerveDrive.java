@@ -4,16 +4,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.drive.RobotDriveBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
 public class SwerveDrive extends RobotDriveBase {
-
-    /**
-     * Empty swerve module that does nothing
-     */
-    public static final SwerveModule EMPTY = new SwerveModule(new EmptyController(), new EmptyController());
     
     private final SwerveModule frontLeftSwerve, backLeftSwerve, frontRightSwerve, backRightSwerve;
     
@@ -74,62 +68,5 @@ public class SwerveDrive extends RobotDriveBase {
                         backRightSwerve.getRotationServo()::setDesiredAngle);
         builder.addDoubleProperty("Back Right Speed", backRightSwerve.getDriveMotor()::get,
                         backRightSwerve.getDriveMotor()::set);
-    }
-
-    /**
-     * Empty Servo/SpeedController for use in the {@code EMPTY} swerve module
-     */
-    private static class EmptyController implements IServo, SpeedController {
-
-        @Override
-        public void setDesiredAngle(double degrees) {}
-
-        @Override
-        public double getDesiredAngle() {
-            return 0;
-        }
-
-        @Override
-        public double getActualAngle() {
-            return 0;
-        }
-
-        @Override
-        public void setDesiredPosition(double position) {}
-
-        @Override
-        public double getDesiredPosition() {
-            return 0;
-        }
-
-        @Override
-        public double getActualPosition() {
-            return 0;
-        }
-
-        @Override
-        public void pidWrite(double output) {}
-
-        @Override
-        public void set(double speed) {}
-
-        @Override
-        public double get() {
-            return 0;
-        }
-
-        @Override
-        public void setInverted(boolean isInverted) {}
-
-        @Override
-        public boolean getInverted() {
-            return false;
-        }
-
-        @Override
-        public void disable() {}
-
-        @Override
-        public void stopMotor() {}
     }
 }

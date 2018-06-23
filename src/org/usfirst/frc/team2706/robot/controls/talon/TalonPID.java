@@ -154,7 +154,7 @@ public class TalonPID {
 
         // Apply initial settings to each talon
         for (TalonSensorGroup talon : talons) {
-            TalonSRX master = talon.getMaster();
+            IWPI_TalonSRX master = talon.getMaster();
 
             // Set the min and max of each motor
             master.configNominalOutputForward(0, 0);
@@ -193,7 +193,7 @@ public class TalonPID {
 
         // Apply initial settings to each talon
         for (TalonSensorGroup talon : talons) {
-            TalonSRX master = talon.getMaster();
+            IWPI_TalonSRX master = talon.getMaster();
 
             // Reset PID values
             master.config_kP(0, 0, 0);

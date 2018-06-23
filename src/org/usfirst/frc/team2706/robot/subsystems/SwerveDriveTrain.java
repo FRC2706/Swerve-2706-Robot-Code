@@ -6,11 +6,13 @@ import org.usfirst.frc.team2706.robot.commands.teleop.ArcadeDriveWithJoystick;
 import org.usfirst.frc.team2706.robot.controls.swerve.SwerveDrive;
 import org.usfirst.frc.team2706.robot.controls.swerve.SwerveModule;
 import org.usfirst.frc.team2706.robot.controls.swerve.TalonServo;
+import org.usfirst.frc.team2706.robot.controls.talon.EWPI_TalonSRX;
+import org.usfirst.frc.team2706.robot.controls.talon.IWPI_TalonSRX;
+import org.usfirst.frc.team2706.robot.controls.talon.MockWPI_TalonSRX;
 import org.usfirst.frc.team2706.robot.controls.talon.TalonEncoder;
 import org.usfirst.frc.team2706.robot.controls.talon.TalonSensorGroup;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.command.Command;
@@ -28,80 +30,44 @@ public class SwerveDriveTrain extends Subsystem {
     public SwerveDriveTrain() {
         super();
 
-        if (RobotMap.MOTOR_FRONT_LEFT_REAL) {
-            WPI_TalonSRX rotate = new WPI_TalonSRX(RobotMap.MOTOR_FRONT_LEFT_ROTATION);
-            WPI_TalonSRX drive = new WPI_TalonSRX(RobotMap.MOTOR_FRONT_LEFT_DRIVE);
-            frontLeftSwerve = new SwerveModule(drive,
-                            new TalonServo(new TalonSensorGroup(rotate, new TalonEncoder(rotate))));
-            frontLeftEncoder = new TalonEncoder(drive);
-        } else {
-            frontLeftSwerve = SwerveDrive.EMPTY;
-            frontLeftEncoder = EMPTY;
-        }
-
-        if (RobotMap.MOTOR_BACK_LEFT_REAL) {
-            WPI_TalonSRX rotate = new WPI_TalonSRX(RobotMap.MOTOR_BACK_LEFT_ROTATION);
-            WPI_TalonSRX drive = new WPI_TalonSRX(RobotMap.MOTOR_BACK_LEFT_DRIVE);
-            backLeftSwerve = new SwerveModule(drive,
-                            new TalonServo(new TalonSensorGroup(rotate, new TalonEncoder(rotate))));
-            backLeftEncoder = new TalonEncoder(drive);
-        } else {
-            backLeftSwerve = SwerveDrive.EMPTY;
-            backLeftEncoder = EMPTY;
-        }
-
-        if (RobotMap.MOTOR_FRONT_RIGHT_REAL) {
-            WPI_TalonSRX rotate = new WPI_TalonSRX(RobotMap.MOTOR_FRONT_RIGHT_ROTATION);
-            WPI_TalonSRX drive = new WPI_TalonSRX(RobotMap.MOTOR_FRONT_RIGHT_DRIVE);
-            frontRightSwerve = new SwerveModule(drive,
-                            new TalonServo(new TalonSensorGroup(rotate, new TalonEncoder(rotate))));
-            frontRightEncoder = new TalonEncoder(drive);
-        } else {
-            frontRightSwerve = SwerveDrive.EMPTY;
-            frontRightEncoder = EMPTY;
-        }
+        frontLeftSwerve = makeSwerveModule(RobotMap.MOTOR_FRONT_LEFT_ROTATION, RobotMap.MOTOR_FRONT_LEFT_DRIVE);
+        frontLeftEncoder = ((TalonServo)frontLeftSwerve.getRotationServo()).getTalons().getTalonEncoder();
         
-        if (RobotMap.MOTOR_BACK_RIGHT_REAL) {
-            WPI_TalonSRX rotate = new WPI_TalonSRX(RobotMap.MOTOR_BACK_RIGHT_ROTATION);
-            WPI_TalonSRX drive = new WPI_TalonSRX(RobotMap.MOTOR_BACK_RIGHT_DRIVE);
-            backRightSwerve = new SwerveModule(drive,
-                            new TalonServo(new TalonSensorGroup(rotate, new TalonEncoder(rotate))));
-            backRightEncoder = new TalonEncoder(drive);
-            
-        } else {
-            backRightSwerve = SwerveDrive.EMPTY;
-            backRightEncoder = EMPTY;
-        }
+        backLeftSwerve = makeSwerveModule(RobotMap.MOTOR_BACK_LEFT_ROTATION, RobotMap.MOTOR_BACK_LEFT_DRIVE);
+        backLeftEncoder = ((TalonServo)backLeftSwerve.getRotationServo()).getTalons().getTalonEncoder();
+        
+        frontRightSwerve = makeSwerveModule(RobotMap.MOTOR_FRONT_RIGHT_ROTATION, RobotMap.MOTOR_FRONT_RIGHT_DRIVE);
+        frontRightEncoder = ((TalonServo)frontRightSwerve.getRotationServo()).getTalons().getTalonEncoder();
+        
+        backRightSwerve = makeSwerveModule(RobotMap.MOTOR_BACK_RIGHT_ROTATION, RobotMap.MOTOR_BACK_RIGHT_DRIVE);
+        backRightEncoder = ((TalonServo)backRightSwerve.getRotationServo()).getTalons().getTalonEncoder();
 
         drive = new SwerveDrive(frontLeftSwerve, backLeftSwerve, frontRightSwerve, backRightSwerve);
 
 
     }
-
-    private static final TalonEncoder EMPTY = new EmptyTalonEncoder();
-
-    private static class EmptyTalonEncoder extends TalonEncoder {
-
-        public EmptyTalonEncoder() {
-            super(null);
-        }
-        
-        @Override
-        public int get() {
-            return 0;
-        }
-        
-        @Override
-        public void reset() {}
-        
-        @Override
-        public double getRate() {
-            return 0;
-        }
-        
-        public void setDistancePerPulse(double dpp) {}
-    }
     
+    private SwerveModule makeSwerveModule(int rotate, int forward) {
+        IWPI_TalonSRX rotateMotor;
+        if(rotate == -1) {
+            rotateMotor = new MockWPI_TalonSRX();
+        }
+        else {
+            rotateMotor = new EWPI_TalonSRX(rotate);
+        }
+        
+        TalonServo servo = new TalonServo(new TalonSensorGroup(rotateMotor, new TalonEncoder(rotateMotor)));
+        
+        IWPI_TalonSRX forwardMotor;
+        if(forward == -1) {
+            forwardMotor = new MockWPI_TalonSRX();
+        }
+        else {
+            forwardMotor = new EWPI_TalonSRX(forward);
+        }
+        
+        return new SwerveModule(forwardMotor, servo);
+    }
     public void initTestMode() {
         // Let's show everything on the LiveWindow
     }
@@ -133,25 +99,45 @@ public class SwerveDriveTrain extends Subsystem {
         SmartDashboard.putNumber("Back Left Distance", backLeftEncoder.getDistance());
         SmartDashboard.putNumber("Front Right Distance", frontRightEncoder.getDistance());
         SmartDashboard.putNumber("Back Right Distance", backRightEncoder.getDistance());
+        
         SmartDashboard.putNumber("Front Left Speed", frontLeftEncoder.getRate());
         SmartDashboard.putNumber("Back Left Speed", backLeftEncoder.getRate());
         SmartDashboard.putNumber("Front Right Speed", frontRightEncoder.getRate());
         SmartDashboard.putNumber("Back Right Speed", backRightEncoder.getRate());
     }
-    
-    public void brakeMode(boolean on) {
-        if (RobotMap.MOTOR_FRONT_LEFT_REAL) {
-            ((WPI_TalonSRX)frontLeftSwerve.getDriveMotor()).setNeutralMode(on ? NeutralMode.Brake : NeutralMode.Coast);
-        }
-        if (RobotMap.MOTOR_BACK_LEFT_REAL) {
-            ((WPI_TalonSRX)backLeftSwerve.getDriveMotor()).setNeutralMode(on ? NeutralMode.Brake : NeutralMode.Coast);
-        }
-        if (RobotMap.MOTOR_FRONT_RIGHT_REAL) {
-            ((WPI_TalonSRX)frontRightSwerve.getDriveMotor()).setNeutralMode(on ? NeutralMode.Brake : NeutralMode.Coast);
-        }
-        if (RobotMap.MOTOR_BACK_RIGHT_REAL) {
-            ((WPI_TalonSRX)backRightSwerve.getDriveMotor()).setNeutralMode(on ? NeutralMode.Brake : NeutralMode.Coast);
-        }
+
+    public void debugLog() {
+        Log.d("Drive Train", "Front Left Distance" + frontLeftEncoder.getDistance());
+        Log.d("Drive Train", "Back Left Distance" + backLeftEncoder.getDistance());
+        Log.d("Drive Train", "Front Right Distance" + frontRightEncoder.getDistance());
+        Log.d("Drive Train", "Back Right Distance" + backRightEncoder.getDistance());
+        
+        Log.d("Drive Train", "Front Right Temperature "
+                        + ((IWPI_TalonSRX) frontRightSwerve.getDriveMotor()).getTemperature());
+        Log.d("Drive Train", "Front Left Temperature "
+                        + ((IWPI_TalonSRX) frontLeftSwerve.getDriveMotor()).getTemperature());
+        Log.d("Drive Train", "Back Right Temperature "
+                        + ((IWPI_TalonSRX) backRightSwerve.getDriveMotor()).getTemperature());
+        Log.d("Drive Train", "Back Left Temperature "
+                        + ((IWPI_TalonSRX) backLeftSwerve.getDriveMotor()).getTemperature());
+        
+        Log.d("Drive Train", "Front Right Current "
+                        + ((IWPI_TalonSRX) frontRightSwerve.getDriveMotor()).getOutputCurrent());
+        Log.d("Drive Train", "Front Left Current "
+                        + ((IWPI_TalonSRX) frontLeftSwerve.getDriveMotor()).getOutputCurrent());
+        Log.d("Drive Train", "Back Right Current "
+                        + ((IWPI_TalonSRX) backRightSwerve.getDriveMotor()).getOutputCurrent());
+        Log.d("Drive Train", "Back Left Current "
+                        + ((IWPI_TalonSRX) backLeftSwerve.getDriveMotor()).getOutputCurrent());
+        
+        Log.d("Drive Train", "Front Right Output "
+                        + ((IWPI_TalonSRX) frontRightSwerve.getDriveMotor()).getMotorOutputPercent());
+        Log.d("Drive Train", "Front Left Output "
+                        + ((IWPI_TalonSRX) frontLeftSwerve.getDriveMotor()).getMotorOutputPercent());
+        Log.d("Drive Train", "Back Right Output "
+                        + ((IWPI_TalonSRX) backRightSwerve.getDriveMotor()).getMotorOutputPercent());
+        Log.d("Drive Train", "Back Left Output "
+                        + ((IWPI_TalonSRX) backLeftSwerve.getDriveMotor()).getMotorOutputPercent());
     }
 
     public void reset() {
@@ -171,5 +157,21 @@ public class SwerveDriveTrain extends Subsystem {
     
     public void swerveDrive(double forward, double strafe, double rotation) {
         drive.swerveDrive(forward, strafe, rotation, true);
+    }
+    
+    /**
+     * Sets the CANTalon motors to go into brake mode or coast mode
+     * 
+     * @param on Set to brake when true and coast when false
+     */
+    public void brakeMode(boolean on) {
+        NeutralMode mode = on ? NeutralMode.Brake : NeutralMode.Coast;
+
+        Log.i("Brake Mode", mode);
+
+        ((IWPI_TalonSRX) frontLeftSwerve.getDriveMotor()).setNeutralMode(mode);
+        ((IWPI_TalonSRX) backLeftSwerve.getDriveMotor()).setNeutralMode(mode);
+        ((IWPI_TalonSRX) frontRightSwerve.getDriveMotor()).setNeutralMode(mode);
+        ((IWPI_TalonSRX) backRightSwerve.getDriveMotor()).setNeutralMode(mode);
     }
 }

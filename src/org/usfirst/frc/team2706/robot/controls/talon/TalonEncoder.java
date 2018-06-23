@@ -1,7 +1,5 @@
 package org.usfirst.frc.team2706.robot.controls.talon;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Sendable;
@@ -33,7 +31,7 @@ public class TalonEncoder extends SensorBase implements PIDSource, Sendable {
     /**
      * The motor controlling the PID
      */
-    private final TalonSRX controller;
+    private final IWPI_TalonSRX controller;
 
     /**
      * The scaling to turn ticks into distance
@@ -45,7 +43,7 @@ public class TalonEncoder extends SensorBase implements PIDSource, Sendable {
      * 
      * @param controller The talon with the encoder attached
      */
-    public TalonEncoder(TalonSRX controller) {
+    public TalonEncoder(IWPI_TalonSRX controller) {
         this.controller = controller;
         this.m_pidSource = PIDSourceType.kDisplacement;
     }

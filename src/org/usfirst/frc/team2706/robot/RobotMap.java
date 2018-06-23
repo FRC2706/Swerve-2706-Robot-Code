@@ -22,19 +22,15 @@ public class RobotMap {
     public static final boolean INVERT_JOYSTICK_Y = true;
     public static final boolean INVERT_JOYSTICK_Z = false;
     
-    public static final boolean MOTOR_FRONT_LEFT_REAL = true;
     public static final int MOTOR_FRONT_LEFT_DRIVE = 1;
     public static final int MOTOR_FRONT_LEFT_ROTATION = 2;
     
-    public static final boolean MOTOR_BACK_LEFT_REAL = false;
     public static final int MOTOR_BACK_LEFT_DRIVE = -1;
     public static final int MOTOR_BACK_LEFT_ROTATION = -1;
     
-    public static final boolean MOTOR_FRONT_RIGHT_REAL = false;
     public static final int MOTOR_FRONT_RIGHT_DRIVE = -1;
     public static final int MOTOR_FRONT_RIGHT_ROTATION = -1;
     
-    public static final boolean MOTOR_BACK_RIGHT_REAL = false;
     public static final int MOTOR_BACK_RIGHT_DRIVE = -1;
     public static final int MOTOR_BACK_RIGHT_ROTATION = -1;
 
