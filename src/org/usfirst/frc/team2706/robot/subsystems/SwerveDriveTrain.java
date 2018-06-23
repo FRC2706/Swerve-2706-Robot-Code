@@ -173,4 +173,8 @@ public class SwerveDriveTrain extends Subsystem {
         ((IWPI_TalonSRX) frontRightSwerve.getDriveMotor()).setNeutralMode(mode);
         ((IWPI_TalonSRX) backRightSwerve.getDriveMotor()).setNeutralMode(mode);
     }
+    
+    public void stopSwerve() {
+        drive.stopSwerve();
+    }
 }

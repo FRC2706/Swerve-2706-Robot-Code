@@ -70,8 +70,7 @@ public class TalonServo extends SendableBase implements IServo {
 
     @Override
     public void setDesiredPosition(double position) {
-        // May become problem if servo needs to be disabled
-        if(!pid.enabled) pid.enable();
+        if(!pid.isEnabled()) pid.enable();
         
         pid.setSetpoint(position);
     }
@@ -95,5 +94,10 @@ public class TalonServo extends SendableBase implements IServo {
     
     public TalonSensorGroup getTalons() {
         return talons;
+    }
+
+    @Override
+    public void stop() {
+        pid.disable();
     }
 }

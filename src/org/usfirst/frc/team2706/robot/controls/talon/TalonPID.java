@@ -35,7 +35,7 @@ public class TalonPID {
      */
     private double setpoint;
 
-    public boolean enabled;
+    private boolean enabled;
 
     /**
      * The minimum and maximum outputs
@@ -263,5 +263,9 @@ public class TalonPID {
 
         // All talons are on target
         return true;
+    }
+    
+    public boolean isEnabled() {
+        return enabled;
     }
 }

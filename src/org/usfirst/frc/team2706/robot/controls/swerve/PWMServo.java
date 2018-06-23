@@ -41,4 +41,9 @@ public class PWMServo extends Servo implements IServo {
         // Servo can't go to absolute value and doesn't have current location information
         return this.getAngle();
     }
+
+    @Override
+    public void stop() {
+        this.setDisabled();
+    }
 }

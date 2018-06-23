@@ -11,4 +11,6 @@ public interface IServo  {
     double getDesiredPosition();
     
     double getActualPosition();
+    
+    void stop();
 }

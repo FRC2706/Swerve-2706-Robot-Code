@@ -57,7 +57,8 @@ public class ArcadeDriveWithJoystick extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-        Robot.driveTrain.swerveDrive(0, 0, 0);
+        // Stop the servoing until swerve drive is used again
+        Robot.driveTrain.stopSwerve();
     }
 
     // Called when another command which requires one or more of the same

@@ -92,6 +92,13 @@ public class SwerveDrive extends RobotDriveBase {
 
         m_safetyHelper.feed();
     }
+    
+
+    public void stopSwerve() {
+        stopMotor();
+        
+        modules.forEach((swerve) -> swerve.getRotationServo().stop());
+    }
 
     @Override
     public String getDescription() {
